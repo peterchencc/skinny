@@ -1,11 +1,21 @@
 require 'spec_helper'
 
 describe 'user accounts' do
+
+  subject(:user) { User.new(firstname: "Peter", lastname: "Chen", email: "peter@example.com", password: "Pass00word",
+   password_confirmation: "Pass00word") }
+
+  it { expect(user).to be_valid }
+
   describe "the length of the firstname" do
 
+    before do
+      user.firstname = "really really really really super super super long firstname that is crazy long"
+    end
+
     it "should not be super long" do
-      user = User.new(firstname: "really really really really super super super long firstname that is crazy long")
-      user.valid?.should_not == true
+      expect(user).to be_invalid
+      # user.valid?.should_not == true
     end
 
     it "should not be super short" do
@@ -32,15 +42,15 @@ describe 'user accounts' do
     end
   end
 
-  describe "updating the email address" do
-    it "should still test the validation" do
-      user = User.create(firstname: "Jimmy Jim", password: "password", email: "admin@example.com")
-      user.valid?.should == true
-      user.email = "admin2@example.com"
-      user.save
-      user.valid?.should == true
-    end
-  end
+  # describe "updating the email address" do
+  #   it "should still test the validation" do
+  #     user = User.create(firstname: "Jimmy Jim", password: "password", email: "admin@example.com")
+  #     user.valid?.should == true
+  #     user.email = "admin2@example.com"
+  #     user.save
+  #     user.valid?.should == true
+  #   end
+  # end
 
   describe "password requirements" do
     it "doesn't allow a passoword that's less than 8 characters and matches the firstname" do

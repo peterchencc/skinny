@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   validates :firstname, presence: true, length: 2..50
   validates :middlename, length: 2..50, allow_blank: true
   validates :lastname, presence: true, length: 2..50
-  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
+  validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
   validates :password, presence: true, confirmation: true, length: { minimum: 8 }
 
   def self.authenticate(email, password)
