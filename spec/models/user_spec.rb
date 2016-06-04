@@ -1,27 +1,57 @@
 require 'spec_helper'
 
-describe 'user accounts' do
+describe User do
 
-  subject(:user) { User.new(firstname: "Peter", lastname: "Chen", email: "peter@example.com", password: "Pass00word",
-   password_confirmation: "Pass00word") }
+  subject(:user) { User.new(firstname: firstname, middlename: middlename, lastname: lastname,
+  email: email, password: password,
+  password_confirmation: password_confirmation) }
+
+  let(:firstname) { "Peter" }
+  let(:middlename) { nil }
+  let(:lastname) { "Chen" }
+  let(:email) { "peter@example.com" }
+  let(:password) { "Pass00word" }
+  let(:password_confirmation) { "Pass00word" }
 
   it { expect(user).to be_valid }
 
-  describe "the length of the firstname" do
+  describe "#fullname" do
+    context "when firstname, middlename, lastname exist" do
+      let(:middlename) { "Omg" }
+      let(:fullname) { "#{firstname} #{middlename} #{lastname}" }
 
-    before do
-      user.firstname = "really really really really super super super long firstname that is crazy long"
+      it "concats all names into a single string" do
+        expect(user.fullname).to  eql(fullname)
+      end
+    end
+  end
+
+
+  describe "#firstname" do
+
+    context "when too long" do
+      let(:firstname) { "really really really reallyreally  really really super super super long firstname that is crazy long" }
+
+      it { expect(user).to be_invalid }
     end
 
-    it "should not be super long" do
-      expect(user).to be_invalid
-      # user.valid?.should_not == true
+    context "when too short" do
+      let(:firstname) { "s" }
+
+      it { expect(user).to be_invalid }
     end
 
-    it "should not be super short" do
-      user = User.new(firstname: "sht")
-      user.valid?.should_not == true
+    context "when it is not present" do
+      let(:firstname) { "" }
+
+      it { expect(user).to be_invalid }
     end
+
+    # context "when it has weird characters" do
+    #   let(:firstname) { "*&^&^$&" }
+
+    #   it { expect(user).to be_invalid }
+    # end
 
     it "exists" do
       user = User.new(firstname: "")
